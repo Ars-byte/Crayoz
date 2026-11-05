@@ -66,7 +66,7 @@ curl -L -o Crayoz https://github.com/Ars-byte/Crayoz/releases/latest/download/Cr
 chmod +x Crayoz
 
 # Move to your PATH (optional)
-sudo mv Crayoz /usr/local/bin/
+sudo mv Crayoz /usr/local/bin
 ```
 
 Or extract the tarball:

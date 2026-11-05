@@ -61,12 +61,12 @@
 Descarga el binario listo para usar (`Crayoz.bin`) o el tarball comprimido (`Crayoz-linux-amd64.tar.gz`) desde la sección de [Releases](https://github.com/Ars-byte/Crayoz/releases):
 
 ```bash
-# Descargar y dar permisos de ejecución
+# Download and make executable
 curl -L -o Crayoz https://github.com/Ars-byte/Crayoz/releases/latest/download/Crayoz.bin
 chmod +x Crayoz
 
-# Mover a tu PATH (opcional)
-sudo mv Crayoz /usr/local/bin/
+# Move to your PATH (optional)
+sudo mv Crayoz /usr/local/bin
 ```
 
 O descomprime el tarball:
