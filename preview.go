@@ -200,3 +200,40 @@ func renderJSON(data []byte, maxLines int, lang Language) string {
 	}
 	return renderPlainText(pretty.Bytes(), maxLines, lang)
 }
+
+import (
+	"archive/zip"
+)
+
+func renderZip(path string, maxLines int, lang Language) string {
+	d := T(lang)
+	r, err := zip.OpenReader(path)
+	if err != nil {
+		return fmt.Sprintf(d.ErrOpenZip, err)
+	}
+	defer r.Close()
+
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf(d.ZipHeader, filepath.Base(path), len(r.File)))
+	sb.WriteString(strings.Repeat("-", 50) + "\n")
+
+	limit := len(r.File)
+	if limit > maxLines {
+		limit = maxLines
+	}
+
+	for i := 0; i < limit; i++ {
+		f := r.File[i]
+		name := f.Name
+		if len(name) > 30 {
+			name = "..." + name[len(name)-27:]
+		}
+		sb.WriteString(fmt.Sprintf("  %-30s %10s\n", name, formatSize(int64(f.UncompressedSize64))))
+	}
+
+	if len(r.File) > limit {
+		sb.WriteString(fmt.Sprintf(d.MoreFiles, len(r.File)-limit))
+	}
+
+	return sb.String()
+}
