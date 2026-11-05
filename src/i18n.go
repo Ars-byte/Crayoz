@@ -27,13 +27,19 @@ type Dict struct {
 	FullscreenHelp    string
 
 	// About
-	AboutTitle     string
-	AboutProject   string
-	AboutCreator   string
-	AboutLanguage  string
-	AboutYear      string
-	AboutLicense   string
-	AboutCloseHint string
+	AboutTitle      string
+	AboutSubtitle   string
+	AboutVersion    string
+	AboutProject    string
+	AboutCreator    string
+	AboutRepo       string
+	AboutLanguage   string
+	AboutYear       string
+	AboutLicense    string
+	AboutLicenseVal string
+	AboutBuiltWith  string
+	AboutReturnHint string
+	AboutCloseHint  string
 
 	// Errors
 	ErrAccess         string
