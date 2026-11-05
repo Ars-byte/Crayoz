@@ -189,7 +189,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 
 	ext := strings.ToLower(filepath.Ext(name))
 	switch ext {
-	// Systems & Native
 	case ".go":
 		return "[GO  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#00ADD8")).Bold(true)
 	case ".c", ".h":
@@ -211,7 +210,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".asm", ".s", ".nasm":
 		return "[ASM ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#6e4c13")).Bold(true)
 
-	// Web & Scripting
 	case ".py", ".pyw", ".ipynb":
 		return "[PY  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ffd343")).Bold(true)
 	case ".js", ".mjs", ".cjs":
@@ -239,7 +237,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".pl", ".pm", ".t":
 		return "[PERL]", lipgloss.NewStyle().Foreground(lipgloss.Color("#0298c3")).Bold(true)
 
-	// JVM & .NET
 	case ".java":
 		return "[JAVA]", lipgloss.NewStyle().Foreground(lipgloss.Color("#b07219")).Bold(true)
 	case ".kt", ".kts":
@@ -255,7 +252,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".vb":
 		return "[VB  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#945db7")).Bold(true)
 
-	// Apple & Mobile
 	case ".swift":
 		return "[SWFT]", lipgloss.NewStyle().Foreground(lipgloss.Color("#f05138")).Bold(true)
 	case ".m", ".mm":
@@ -263,7 +259,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".dart":
 		return "[DART]", lipgloss.NewStyle().Foreground(lipgloss.Color("#00b4ab")).Bold(true)
 
-	// Shells
 	case ".sh", ".bash", ".zsh", ".fish", ".ksh", ".csh":
 		return "[BASH]", lipgloss.NewStyle().Foreground(lipgloss.Color("#4ebd38")).Bold(true)
 	case ".bat", ".cmd":
@@ -271,7 +266,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".ps1", ".psm1":
 		return "[PS  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#012456")).Bold(true)
 
-	// Functional
 	case ".hs", ".lhs":
 		return "[HS  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#5e5086")).Bold(true)
 	case ".ex", ".exs":
@@ -289,7 +283,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".jl":
 		return "[JULI]", lipgloss.NewStyle().Foreground(lipgloss.Color("#a270ba")).Bold(true)
 
-	// Data & Config
 	case ".json", ".json5", ".jsonc":
 		return "[JSON]", lipgloss.NewStyle().Foreground(lipgloss.Color("#48bb78")).Bold(true)
 	case ".yaml", ".yml":
@@ -311,7 +304,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".graphql", ".gql":
 		return "[GQL ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#e10098")).Bold(true)
 
-	// Documentation
 	case ".md", ".markdown":
 		return "[MD  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#4299e1")).Bold(true)
 	case ".txt", ".log":
@@ -323,11 +315,9 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".pdf":
 		return "[PDF ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#e53e3e")).Bold(true)
 
-	// Archives
 	case ".zip", ".tar", ".gz", ".gzip", ".tgz", ".bz2", ".tbz2", ".xz", ".txz", ".7z", ".rar", ".iso", ".deb", ".rpm", ".jar", ".war":
 		return "[ARCH]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ed64a6")).Bold(true)
 
-	// Media
 	case ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".ico", ".svg", ".tiff", ".tif":
 		return "[IMG ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#d53f8c")).Bold(true)
 	case ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma", ".opus":
@@ -337,7 +327,6 @@ func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
 	case ".ttf", ".otf", ".woff", ".woff2", ".eot":
 		return "[FONT]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ecc94b")).Bold(true)
 
-	// Binaries
 	case ".bin", ".exe", ".so", ".dll", ".dylib", ".o", ".a", ".class", ".pyc", ".wasm":
 		return "[BIN ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#f56565")).Bold(true)
 

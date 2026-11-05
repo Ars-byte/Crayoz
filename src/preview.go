@@ -38,7 +38,6 @@ func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
 	ext := strings.ToLower(filepath.Ext(path))
 	baseName := strings.ToLower(filepath.Base(path))
 
-	// Compressed archives
 	switch {
 	case ext == ".zip" || ext == ".jar" || ext == ".war":
 		return renderZip(path, maxLines, lang)
@@ -54,7 +53,6 @@ func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
 		return renderBzip2(path, maxLines, maxWidth, lang)
 	}
 
-	// Read file contents for inspection
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Sprintf(d.ErrReadFile, err)
@@ -64,7 +62,6 @@ func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
 		return d.EmptyFile
 	}
 
-	// Specific data formats
 	switch {
 	case ext == ".json" || ext == ".json5" || ext == ".jsonc":
 		return renderJSON(data, maxLines, lang)
@@ -82,12 +79,10 @@ func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
 		return renderDocumentCard(data, filepath.Base(path), ext, info, lang)
 	}
 
-	// Binary check
 	if isBinary(data) {
 		return renderBinary(data, info, lang)
 	}
 
-	// Code or structured text
 	if isCode(ext) || isSpecialTextFile(baseName) {
 		return renderCode(data, ext, baseName, maxLines, lang)
 	}
@@ -726,7 +721,6 @@ func renderPlainText(data []byte, maxLines int, lang Language) string {
 
 func detectMagicBinary(data []byte) string {
 	if len(data) >= 4 {
-		// ELF (Linux executable/shared object)
 		if bytes.HasPrefix(data, []byte("\x7fELF")) {
 			bits := "32-bit"
 			if data[4] == 2 {
@@ -734,28 +728,22 @@ func detectMagicBinary(data []byte) string {
 			}
 			return fmt.Sprintf("ELF %s Executable/Binary", bits)
 		}
-		// Windows PE / DOS
 		if bytes.HasPrefix(data, []byte("MZ")) {
 			return "Windows PE Executable / DLL"
 		}
-		// WebAssembly
 		if bytes.HasPrefix(data, []byte("\x00asm")) {
 			return "WebAssembly (WASM) Module"
 		}
-		// Java Class
 		if bytes.HasPrefix(data, []byte("\xca\xfe\xba\xbe")) {
 			return "Compiled Java Class Bytecode"
 		}
-		// Mach-O (macOS)
 		if bytes.HasPrefix(data, []byte("\xfe\xed\xfa\xce")) || bytes.HasPrefix(data, []byte("\xce\xfa\xed\xfe")) ||
 			bytes.HasPrefix(data, []byte("\xfe\xed\xfa\xcf")) || bytes.HasPrefix(data, []byte("\xcf\xfa\xed\xfe")) {
 			return "Mach-O (macOS) Executable"
 		}
-		// PDF
 		if bytes.HasPrefix(data, []byte("%PDF-")) {
 			return "Adobe PDF Document"
 		}
-		// SQLite
 		if bytes.HasPrefix(data, []byte("SQLite format 3\x00")) {
 			return "SQLite Database File"
 		}

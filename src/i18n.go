@@ -26,7 +26,6 @@ type Dict struct {
 	ExplorerFooter    string
 	FullscreenHelp    string
 
-	// About
 	AboutTitle      string
 	AboutSubtitle   string
 	AboutVersion    string
@@ -41,7 +40,6 @@ type Dict struct {
 	AboutReturnHint string
 	AboutCloseHint  string
 
-	// Errors
 	ErrAccess         string
 	ErrRunApp         string
 	ErrGeneral        string
@@ -52,7 +50,6 @@ type Dict struct {
 	ErrReadGzip       string
 	ErrReadFile       string
 
-	// Preview formatting
 	DirHeader        string
 	MoreItems        string
 	ZipHeader        string
