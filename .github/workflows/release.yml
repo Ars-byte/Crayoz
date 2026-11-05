@@ -63,18 +63,7 @@ jobs:
       - name: Create or Update GitHub Release
         run: |
           TAG="${{ steps.vars.outputs.tag }}"
-          cat << 'EOF' > release_notes.md
-## Installation
-
-```bash
-# Download and make executable
-curl -L -o Crayoz https://github.com/Ars-byte/Crayoz/releases/latest/download/Crayoz.bin
-chmod +x Crayoz
-
-# Move to your PATH (optional)
-sudo mv Crayoz /usr/local/bin
-```
-EOF
+          printf '## Installation\n\n```bash\n# Download and make executable\ncurl -L -o Crayoz https://github.com/Ars-byte/Crayoz/releases/latest/download/Crayoz.bin\nchmod +x Crayoz\n\n# Move to your PATH (optional)\nsudo mv Crayoz /usr/local/bin\n```\n' > release_notes.md
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists, updating assets with --clobber..."
             gh release upload "$TAG" \
