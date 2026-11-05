@@ -262,3 +262,153 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	return m, nil
 }
+
+func (m Model) View() string {
+	d := T(m.lang)
+	if m.width == 0 || m.height == 0 {
+		return d.Starting
+	}
+
+	headerStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#ffffff")).
+		Background(lipgloss.Color("#2d3748")).
+		Padding(0, 1).
+		Width(m.width)
+
+	footerStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#a0aec0")).
+		Background(lipgloss.Color("#1a202c")).
+		Padding(0, 1).
+		Width(m.width)
+
+	helpStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#718096")).
+		Background(lipgloss.Color("#1a202c")).
+		Padding(0, 1).
+		Width(m.width)
+
+	if m.fullScreen {
+		if len(m.items) == 0 {
+			return d.NoFileSelected
+		}
+		item := m.items[m.cursor]
+		header := headerStyle.Render(fmt.Sprintf(d.FullPreviewHeader, item.name, formatSize(item.size)))
+
+		lines := strings.Split(GetPreview(item.path, 5000, m.width-2, m.lang), "\n")
+		contentRows := m.height - 3
+		if contentRows < 1 {
+			contentRows = 1
+		}
+
+		if m.fileScroll >= len(lines) {
+			m.fileScroll = len(lines) - 1
+		}
+		if m.fileScroll < 0 {
+			m.fileScroll = 0
+		}
+
+		end := m.fileScroll + contentRows
+		if end > len(lines) {
+			end = len(lines)
+		}
+
+		content := strings.Join(lines[m.fileScroll:end], "\n")
+		help := helpStyle.Render(d.FullscreenHelp)
+		return fmt.Sprintf("%s\n%s\n%s", header, content, help)
+	}
+
+	header := headerStyle.Render(fmt.Sprintf(d.ExplorerHeader, m.currDir))
+
+	contentHeight := m.height - 3
+	if contentHeight < 1 {
+		contentHeight = 1
+	}
+
+	leftW := m.leftWidth()
+	rightW := m.width - leftW - 3
+	if rightW < 10 {
+		rightW = 10
+	}
+
+	var leftLines []string
+	endIndex := m.scroll + contentHeight
+	if endIndex > len(m.items) {
+		endIndex = len(m.items)
+	}
+
+	selectedStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#000000")).
+		Background(lipgloss.Color("#63b3ed")).
+		Width(leftW)
+
+	dirStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#63b3ed"))
+
+	fileStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#e2e8f0"))
+
+	for i := m.scroll; i < endIndex; i++ {
+		item := m.items[i]
+		tag := "[FILE]"
+		if item.isDir {
+			tag = "[DIR] "
+		}
+
+		displayName := item.name
+		maxNameLen := leftW - 8
+		if len(displayName) > maxNameLen && maxNameLen > 3 {
+			displayName = displayName[:maxNameLen-3] + "..."
+		}
+
+		lineText := fmt.Sprintf(" %s %s", tag, displayName)
+
+		if i == m.cursor {
+			leftLines = append(leftLines, selectedStyle.Render(lineText))
+		} else if item.isDir {
+			leftLines = append(leftLines, dirStyle.Render(lineText))
+		} else {
+			leftLines = append(leftLines, fileStyle.Render(lineText))
+		}
+	}
+
+	for len(leftLines) < contentHeight {
+		leftLines = append(leftLines, "")
+	}
+
+	rawPreviewLines := strings.Split(m.preview, "\n")
+	var rightLines []string
+	for i := 0; i < contentHeight; i++ {
+		if i < len(rawPreviewLines) {
+			line := rawPreviewLines[i]
+			if len(line) > rightW {
+				line = line[:rightW]
+			}
+			rightLines = append(rightLines, line)
+		} else {
+			rightLines = append(rightLines, "")
+		}
+	}
+
+	var bodyBuilder strings.Builder
+	for i := 0; i < contentHeight; i++ {
+		leftPart := lipgloss.NewStyle().Width(leftW).Render(leftLines[i])
+		rightPart := rightLines[i]
+		bodyBuilder.WriteString(fmt.Sprintf("%s │ %s\n", leftPart, rightPart))
+	}
+
+	statusText := d.NoItems
+	if len(m.items) > 0 {
+		currItem := m.items[m.cursor]
+		sizeInfo := "<DIR>"
+		if !currItem.isDir {
+			sizeInfo = formatSize(currItem.size)
+		}
+		statusText = fmt.Sprintf(d.ItemStatus, m.cursor+1, len(m.items), currItem.name, sizeInfo)
+	}
+
+	footer := footerStyle.Render(fmt.Sprintf(d.ExplorerFooter, statusText))
+	return fmt.Sprintf("%s\n%s%s", header, bodyBuilder.String(), footer)
+}
