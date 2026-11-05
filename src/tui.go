@@ -360,11 +360,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		if m.showAbout {
-			switch msg.String() {
-			case "esc", "enter", "space", "?", "a", "q":
-				m.showAbout = false
-				return m, nil
+			if msg.String() == "ctrl+c" {
+				return m, tea.Quit
 			}
+			m.showAbout = false
 			return m, nil
 		}
 
