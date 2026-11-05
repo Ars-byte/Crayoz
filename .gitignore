@@ -1,0 +1,16 @@
+# Binaries and build artifacts
+File_reader
+File_reader.bin
+*.bin
+*.exe
+*.test
+*.out
+*.tar.gz
+main
+
+# IDEs and OS files
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
