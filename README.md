@@ -10,6 +10,12 @@
 
 ---
 
+## Preview
+
+![Crayoz Preview](preview/preview.png)
+
+---
+
 ## Features
 
 - **Dual-Panel Explorer**: Browse directories with real-time split preview.

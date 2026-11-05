@@ -10,6 +10,12 @@
 
 ---
 
+## Vista previa (Preview)
+
+![Vista previa de Crayoz](preview/preview.png)
+
+---
+
 ## Características
 
 - **Explorador de doble panel**: Navega por carpetas con panel lateral de previsualización en tiempo real.
