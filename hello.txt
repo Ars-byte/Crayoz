@@ -1,3 +1,0 @@
-Hola, este es un archivo de ejemplo para el programa Crayoz.
-
-Lo estas leyendo con Go usando os.ReadFile.
