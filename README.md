@@ -10,22 +10,22 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- 📂 **Dual-Panel Explorer**: Browse directories with real-time split preview.
-- 📖 **Fullscreen Reader**: Distraction-free file reading mode with line-by-line and page scrolling.
-- 🎨 **Multi-Format Previews**:
+- **Dual-Panel Explorer**: Browse directories with real-time split preview.
+- **Fullscreen Reader**: Distraction-free file reading mode with line-by-line and page scrolling.
+- **Multi-Format Previews**:
   - **Source Code**: Line-numbered preview for Go, Python, JavaScript, TypeScript, Rust, C/C++, Shell, Markdown, and more.
   - **Structured Data**: Pretty-printed JSON and column-aligned CSV/TSV tables.
   - **Archives**: Inspect `.zip` file tables of contents and preview `.gz` / `.gzip` compressed data.
   - **Binary Files**: Automatic MIME type detection, file metadata, permissions, and hexadecimal byte dump.
-- 🌐 **Instant Language Switching**: Toggle between English and Spanish instantly inside the TUI with `Tab` or `t`.
-- ⚡ **Zero External Runtime Dependencies**: Single self-contained binary.
-- 🚀 **Automated CI/CD Workflow**: Every update compiles a ready-to-run `.bin` binary and packages a `.tar.gz` distribution into GitHub Releases.
+- **Instant Language Switching**: Toggle between English and Spanish instantly inside the TUI with `Tab` or `t`.
+- **Zero External Runtime Dependencies**: Single self-contained binary.
+- **Automated CI/CD Workflow**: Every update compiles a ready-to-run `.bin` binary and packages a `.tar.gz` distribution into GitHub Releases.
 
 ---
 
-## ⌨️ Keybindings
+## Keybindings
 
 | Key | Action |
 | --- | --- |
@@ -42,7 +42,7 @@
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Pre-built Binaries (GitHub Releases)
 
@@ -86,7 +86,7 @@ go build -ldflags="-s -w" -o File_reader .
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ```bash
 # Open file explorer in current directory
@@ -101,7 +101,7 @@ go build -ldflags="-s -w" -o File_reader .
 
 ---
 
-## ⚙️ Automated Releases (CI/CD)
+## Automated Releases (CI/CD)
 
 This repository includes a GitHub Actions workflow (`.github/workflows/release.yml`) that automatically:
 1. Triggers on pushes to `main` and version tags (`v*`).
@@ -112,6 +112,6 @@ This repository includes a GitHub Actions workflow (`.github/workflows/release.y
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).

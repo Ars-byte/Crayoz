@@ -10,22 +10,22 @@
 
 ---
 
-## ✨ Características
+## Características
 
-- 📂 **Explorador de doble panel**: Navega por carpetas con panel lateral de previsualización en tiempo real.
-- 📖 **Lector a pantalla completa**: Modo de lectura sin distracciones con desplazamiento línea por línea y por página.
-- 🎨 **Previsualización de múltiples formatos**:
+- **Explorador de doble panel**: Navega por carpetas con panel lateral de previsualización en tiempo real.
+- **Lector a pantalla completa**: Modo de lectura sin distracciones con desplazamiento línea por línea y por página.
+- **Previsualización de múltiples formatos**:
   - **Código fuente**: Vista numerada de líneas para Go, Python, JavaScript, TypeScript, Rust, C/C++, Shell, Markdown y más.
   - **Datos estructurados**: Formateo automático de JSON y tablas alineadas por columnas para CSV y TSV.
   - **Archivos comprimidos**: Inspección de contenido en archivos `.zip` y descompresión al vuelo de archivos `.gz` / `.gzip`.
   - **Archivos binarios**: Detección de tipo MIME, metadatos, permisos y volcado hexadecimal interactivo.
-- 🌐 **Cambio instantáneo de idioma**: Alterna entre inglés y español al instante dentro de la TUI pulsando `Tab` o `t`.
-- ⚡ **Sin dependencias externas en tiempo de ejecución**: Binario único y autocontenido.
-- 🚀 **Compilación y Releases automáticas (CI/CD)**: Cada cambio compila un ejecutable `.bin` y genera un paquete `.tar.gz` publicado en GitHub Releases.
+- **Cambio instantáneo de idioma**: Alterna entre inglés y español al instante dentro de la TUI pulsando `Tab` o `t`.
+- **Sin dependencias externas en tiempo de ejecución**: Binario único y autocontenido.
+- **Compilación y Releases automáticas (CI/CD)**: Cada cambio compila un ejecutable `.bin` y genera un paquete `.tar.gz` publicado en GitHub Releases.
 
 ---
 
-## ⌨️ Atajos de teclado
+## Atajos de teclado
 
 | Tecla | Acción |
 | --- | --- |
@@ -42,7 +42,7 @@
 
 ---
 
-## 📦 Instalación
+## Instalación
 
 ### Binarios precompilados (GitHub Releases)
 
@@ -86,7 +86,7 @@ go build -ldflags="-s -w" -o File_reader .
 
 ---
 
-## 🚀 Uso
+## Uso
 
 ```bash
 # Iniciar en el directorio actual
@@ -101,7 +101,7 @@ go build -ldflags="-s -w" -o File_reader .
 
 ---
 
-## ⚙️ Releases Automáticas (CI/CD)
+## Releases Automáticas (CI/CD)
 
 Este repositorio cuenta con un workflow de GitHub Actions (`.github/workflows/release.yml`) que automáticamente:
 1. Se ejecuta con cada push a `main` o al crear etiquetas de versión (`v*`).
@@ -112,6 +112,6 @@ Este repositorio cuenta con un workflow de GitHub Actions (`.github/workflows/re
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo la [Licencia MIT](LICENSE).
