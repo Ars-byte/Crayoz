@@ -22,7 +22,7 @@
   - **Archives**: Inspect `.zip` file tables of contents and preview `.gz` / `.gzip` compressed data.
   - **Binary Files**: Automatic MIME type detection, file metadata, permissions, and hexadecimal byte dump.
 - **Instant Language Switching**: Toggle between English and Spanish instantly inside the TUI with `Tab` or `t`.
-- **About Project Modal**: Dedicated info dialog (`?` or `a`) displaying creator, language, and year of creation (2026).
+- **About Screen**: Clean, borderless project view (`?` or `a`) displaying version, creator, repository, license, year, and tech stack; dismissible with any key.
 - **Modular Architecture**: Clean separation with root CLI entry point and internal logic in `src/`.
 - **Zero External Runtime Dependencies**: Single self-contained binary.
 - **Automated CI/CD Workflow**: Every update compiles a ready-to-run `.bin` binary and packages a `.tar.gz` distribution into GitHub Releases.
@@ -41,8 +41,9 @@
 | `PgDn` / `f` / `Space` | Page down scroll |
 | `v` | Toggle fullscreen reading view |
 | `Tab` / `t` | **Toggle language (English ↔ Español)** |
-| `?` / `a` | **Show About Project dialog** |
-| `Esc` | Return to explorer view from fullscreen / close modal |
+| `?` / `a` | **Show About screen** |
+| `Any key` | **Return from About screen** |
+| `Esc` | Return to explorer view from fullscreen |
 | `q` / `Ctrl+C` | Quit application |
 
 ---
