@@ -1,0 +1,72 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          check-latest: true
+
+      - name: Build binary
+        run: |
+          go mod tidy
+          CGO_ENABLED=0 go build -ldflags="-s -w" -o File_reader.bin .
+          chmod +x File_reader.bin
+
+      - name: Create tarball
+        run: |
+          mkdir -p dist
+          cp File_reader.bin dist/
+          cp README.md dist/ 2>/dev/null || true
+          cp README.es.md dist/ 2>/dev/null || true
+          cp LICENSE dist/ 2>/dev/null || true
+          tar -czvf File_reader-linux-amd64.tar.gz -C dist .
+
+      - name: Generate Checksums
+        run: |
+          sha256sum File_reader.bin File_reader-linux-amd64.tar.gz > checksums.txt
+
+      - name: Determine tag name
+        id: vars
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          else
+            TAG="v1.0.${{ github.run_number }}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: Release ${{ steps.vars.outputs.tag }}
+          files: |
+            File_reader.bin
+            File_reader-linux-amd64.tar.gz
+            checksums.txt
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
