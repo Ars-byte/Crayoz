@@ -231,10 +231,67 @@ func renderCSV(data []byte, delimiter rune, maxLines int, lang Language) string 
 	return sb.String()
 }
 
+func getLanguageName(ext string) string {
+	switch ext {
+	case ".go":
+		return "Go"
+	case ".c", ".h":
+		return "C"
+	case ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh":
+		return "C++"
+	case ".rs":
+		return "Rust"
+	case ".py":
+		return "Python"
+	case ".js", ".mjs", ".cjs":
+		return "JavaScript"
+	case ".ts", ".mts", ".cts":
+		return "TypeScript"
+	case ".jsx":
+		return "React JSX"
+	case ".tsx":
+		return "React TSX"
+	case ".java":
+		return "Java"
+	case ".cs":
+		return "C#"
+	case ".rb":
+		return "Ruby"
+	case ".php":
+		return "PHP"
+	case ".sh", ".bash", ".zsh":
+		return "Shell"
+	case ".html", ".htm":
+		return "HTML"
+	case ".css", ".scss", ".sass", ".less":
+		return "CSS"
+	case ".sql":
+		return "SQL"
+	case ".lua":
+		return "Lua"
+	case ".zig":
+		return "Zig"
+	case ".dart":
+		return "Dart"
+	case ".toml":
+		return "TOML"
+	case ".yaml", ".yml":
+		return "YAML"
+	case ".xml":
+		return "XML"
+	default:
+		return "Source Code"
+	}
+}
+
 func renderCode(data []byte, ext string, maxLines int, lang Language) string {
 	d := T(lang)
 	lines := strings.Split(string(data), "\n")
 	var sb strings.Builder
+
+	langName := getLanguageName(ext)
+	sb.WriteString(fmt.Sprintf("[%s - %d lines]\n", langName, len(lines)))
+	sb.WriteString(strings.Repeat("-", 40) + "\n")
 
 	limit := len(lines)
 	if limit > maxLines {

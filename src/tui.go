@@ -166,6 +166,71 @@ func (m Model) leftWidth() int {
 	return w
 }
 
+func GetFileBadge(name string, isDir bool) (string, lipgloss.Style) {
+	if isDir {
+		if name == ".." {
+			return "[UP  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#a0aec0")).Bold(true)
+		}
+		return "[DIR ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#63b3ed")).Bold(true)
+	}
+
+	ext := strings.ToLower(filepath.Ext(name))
+	switch ext {
+	case ".go":
+		return "[GO  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#00ADD8")).Bold(true)
+	case ".c", ".h":
+		return "[C   ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#5c95d4")).Bold(true)
+	case ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh":
+		return "[C++ ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#00599c")).Bold(true)
+	case ".rs":
+		return "[RUST]", lipgloss.NewStyle().Foreground(lipgloss.Color("#dea584")).Bold(true)
+	case ".py":
+		return "[PY  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ffd343")).Bold(true)
+	case ".js", ".mjs", ".cjs":
+		return "[JS  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#f7df1e")).Bold(true)
+	case ".ts", ".mts", ".cts":
+		return "[TS  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#3178c6")).Bold(true)
+	case ".jsx", ".tsx":
+		return "[REACT]", lipgloss.NewStyle().Foreground(lipgloss.Color("#61dafb")).Bold(true)
+	case ".java":
+		return "[JAVA]", lipgloss.NewStyle().Foreground(lipgloss.Color("#b07219")).Bold(true)
+	case ".cs":
+		return "[C#  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#178600")).Bold(true)
+	case ".rb":
+		return "[RUBY]", lipgloss.NewStyle().Foreground(lipgloss.Color("#e0115f")).Bold(true)
+	case ".php":
+		return "[PHP ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#4f5d95")).Bold(true)
+	case ".sh", ".bash", ".zsh":
+		return "[BASH]", lipgloss.NewStyle().Foreground(lipgloss.Color("#4ebd38")).Bold(true)
+	case ".html", ".htm":
+		return "[HTML]", lipgloss.NewStyle().Foreground(lipgloss.Color("#e34c26")).Bold(true)
+	case ".css", ".scss", ".sass", ".less":
+		return "[CSS ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#805ad5")).Bold(true)
+	case ".json":
+		return "[JSON]", lipgloss.NewStyle().Foreground(lipgloss.Color("#48bb78")).Bold(true)
+	case ".yaml", ".yml":
+		return "[YAML]", lipgloss.NewStyle().Foreground(lipgloss.Color("#e53e3e")).Bold(true)
+	case ".toml":
+		return "[TOML]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ed8936")).Bold(true)
+	case ".xml":
+		return "[XML ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#319795")).Bold(true)
+	case ".sql":
+		return "[SQL ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#9f7aea")).Bold(true)
+	case ".md", ".markdown":
+		return "[MD  ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#4299e1")).Bold(true)
+	case ".zip", ".tar", ".gz", ".gzip", ".7z", ".rar":
+		return "[ARCH]", lipgloss.NewStyle().Foreground(lipgloss.Color("#ed64a6")).Bold(true)
+	case ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico":
+		return "[IMG ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#d53f8c")).Bold(true)
+	case ".txt", ".log":
+		return "[TXT ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#a0aec0"))
+	case ".bin", ".exe", ".so", ".dll", ".o":
+		return "[BIN ]", lipgloss.NewStyle().Foreground(lipgloss.Color("#f56565")).Bold(true)
+	default:
+		return "[FILE]", lipgloss.NewStyle().Foreground(lipgloss.Color("#cbd5e0"))
+	}
+}
+
 func (m Model) Init() tea.Cmd {
 	return nil
 }
@@ -364,34 +429,28 @@ func (m Model) View() string {
 		Background(lipgloss.Color("#63b3ed")).
 		Width(leftW)
 
-	dirStyle := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#63b3ed"))
-
-	fileStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#e2e8f0"))
 
 	for i := m.scroll; i < endIndex; i++ {
 		item := m.items[i]
-		tag := "[FILE]"
-		if item.IsDir {
-			tag = "[DIR] "
-		}
+		tagText, tagStyle := GetFileBadge(item.Name, item.IsDir)
 
 		displayName := item.Name
-		maxNameLen := leftW - 8
+		maxNameLen := leftW - 9
 		if len(displayName) > maxNameLen && maxNameLen > 3 {
 			displayName = displayName[:maxNameLen-3] + "..."
 		}
 
-		lineText := fmt.Sprintf(" %s %s", tag, displayName)
-
 		if i == m.cursor {
+			lineText := fmt.Sprintf(" %s %s", tagText, displayName)
 			leftLines = append(leftLines, selectedStyle.Render(lineText))
-		} else if item.IsDir {
-			leftLines = append(leftLines, dirStyle.Render(lineText))
 		} else {
-			leftLines = append(leftLines, fileStyle.Render(lineText))
+			styledTag := tagStyle.Render(tagText)
+			nameStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#edf2f7"))
+			if item.IsDir {
+				nameStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#63b3ed"))
+			}
+			lineText := fmt.Sprintf(" %s %s", styledTag, nameStyle.Render(displayName))
+			leftLines = append(leftLines, lineText)
 		}
 	}
 
