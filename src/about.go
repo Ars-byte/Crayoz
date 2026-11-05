@@ -9,29 +9,16 @@ import (
 func (m Model) renderAboutModal() string {
 	d := T(m.lang)
 
-	boxWidth := 46
-	if m.width > 0 && boxWidth > m.width-4 {
-		boxWidth = m.width - 4
-	}
-
-	boxStyle := lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#63b3ed")).
-		Padding(1, 2).
-		Width(boxWidth).
-		Background(lipgloss.Color("#1a202c"))
-
 	titleStyle := lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#63b3ed"))
+		Foreground(lipgloss.Color("#ffffff"))
 
 	labelStyle := lipgloss.NewStyle().
 		Bold(true).
 		Foreground(lipgloss.Color("#a0aec0")).
-		Width(12)
+		Width(14)
 
 	valStyle := lipgloss.NewStyle().
-		Bold(true).
 		Foreground(lipgloss.Color("#edf2f7"))
 
 	closeHintStyle := lipgloss.NewStyle().
@@ -46,6 +33,12 @@ func (m Model) renderAboutModal() string {
 	sb.WriteString(labelStyle.Render(d.AboutLicense) + valStyle.Render("MIT License") + "\n\n")
 	sb.WriteString(closeHintStyle.Render(d.AboutCloseHint))
 
-	modal := boxStyle.Render(sb.String())
-	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, modal)
+	padLeft := 4
+	padTop := 2
+	if m.width < 50 {
+		padLeft = 2
+		padTop = 1
+	}
+	containerStyle := lipgloss.NewStyle().Padding(padTop, padLeft)
+	return containerStyle.Render(sb.String())
 }
