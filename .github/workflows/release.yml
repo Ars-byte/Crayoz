@@ -56,13 +56,24 @@ jobs:
           fi
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         run: |
-          gh release create "${{ steps.vars.outputs.tag }}" \
-            Crayoz.bin \
-            Crayoz-linux-amd64.tar.gz \
-            checksums.txt \
-            --title "Release ${{ steps.vars.outputs.tag }}" \
-            --generate-notes
+          TAG="${{ steps.vars.outputs.tag }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists, updating assets with --clobber..."
+            gh release upload "$TAG" \
+              Crayoz.bin \
+              Crayoz-linux-amd64.tar.gz \
+              checksums.txt \
+              --clobber
+          else
+            echo "Creating release $TAG..."
+            gh release create "$TAG" \
+              Crayoz.bin \
+              Crayoz-linux-amd64.tar.gz \
+              checksums.txt \
+              --title "Release $TAG" \
+              --generate-notes
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
