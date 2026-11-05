@@ -7,28 +7,8 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"Crayoz/src"
 )
-
-type Item struct {
-	name  string
-	path  string
-	isDir bool
-	size  int64
-}
-
-type Model struct {
-	currDir    string
-	items      []Item
-	cursor     int
-	scroll     int
-	preview    string
-	fullScreen bool
-	fileScroll int
-	width      int
-	height     int
-	err        string
-	lang       Language
-}
 
 func main() {
 	target := "."
@@ -53,21 +33,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	var m Model
+	var m src.Model
 	if info.IsDir() {
-		m = NewModel(target)
+		m = src.NewModel(target, "")
 	} else {
 		dir := filepath.Dir(target)
-		m = NewModel(dir)
 		base := filepath.Base(target)
-		for i, item := range m.items {
-			if item.name == base {
-				m.cursor = i
-				m.adjustScroll()
-				m.updatePreview()
-				break
-			}
-		}
+		m = src.NewModel(dir, base)
 	}
 
 	p := tea.NewProgram(m, tea.WithAltScreen())

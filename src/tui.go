@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	"fmt"
@@ -11,7 +11,28 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func NewModel(initialDir string) Model {
+type Item struct {
+	Name  string
+	Path  string
+	IsDir bool
+	Size  int64
+}
+
+type Model struct {
+	currDir    string
+	items      []Item
+	cursor     int
+	scroll     int
+	preview    string
+	fullScreen bool
+	fileScroll int
+	width      int
+	height     int
+	err        string
+	lang       Language
+}
+
+func NewModel(initialDir, selectTarget string) Model {
 	absDir, err := filepath.Abs(initialDir)
 	if err != nil {
 		absDir = initialDir
@@ -22,7 +43,7 @@ func NewModel(initialDir string) Model {
 		height:  24,
 		lang:    LangEN,
 	}
-	m.loadDir("")
+	m.loadDir(selectTarget)
 	return m
 }
 
@@ -33,9 +54,9 @@ func (m *Model) loadDir(selectTarget string) {
 
 	if m.currDir != "/" {
 		m.items = append(m.items, Item{
-			name:  "..",
-			path:  filepath.Dir(m.currDir),
-			isDir: true,
+			Name:  "..",
+			Path:  filepath.Dir(m.currDir),
+			IsDir: true,
 		})
 	}
 
@@ -54,10 +75,10 @@ func (m *Model) loadDir(selectTarget string) {
 			size = info.Size()
 		}
 		item := Item{
-			name:  entry.Name(),
-			path:  filepath.Join(m.currDir, entry.Name()),
-			isDir: entry.IsDir(),
-			size:  size,
+			Name:  entry.Name(),
+			Path:  filepath.Join(m.currDir, entry.Name()),
+			IsDir: entry.IsDir(),
+			Size:  size,
 		}
 		if entry.IsDir() {
 			dirs = append(dirs, item)
@@ -67,10 +88,10 @@ func (m *Model) loadDir(selectTarget string) {
 	}
 
 	sort.Slice(dirs, func(i, j int) bool {
-		return strings.ToLower(dirs[i].name) < strings.ToLower(dirs[j].name)
+		return strings.ToLower(dirs[i].Name) < strings.ToLower(dirs[j].Name)
 	})
 	sort.Slice(files, func(i, j int) bool {
-		return strings.ToLower(files[i].name) < strings.ToLower(files[j].name)
+		return strings.ToLower(files[i].Name) < strings.ToLower(files[j].Name)
 	})
 
 	m.items = append(m.items, dirs...)
@@ -79,7 +100,7 @@ func (m *Model) loadDir(selectTarget string) {
 	m.cursor = 0
 	if selectTarget != "" {
 		for i, item := range m.items {
-			if item.name == selectTarget {
+			if item.Name == selectTarget {
 				m.cursor = i
 				break
 			}
@@ -117,8 +138,8 @@ func (m *Model) updatePreview() {
 	}
 
 	item := m.items[m.cursor]
-	if item.name == ".." {
-		m.preview = fmt.Sprintf(d.GoUpLevel, item.path)
+	if item.Name == ".." {
+		m.preview = fmt.Sprintf(d.GoUpLevel, item.Path)
 		return
 	}
 
@@ -131,7 +152,7 @@ func (m *Model) updatePreview() {
 		rightWidth = 10
 	}
 
-	m.preview = GetPreview(item.path, maxLines, rightWidth, m.lang)
+	m.preview = GetPreview(item.Path, maxLines, rightWidth, m.lang)
 }
 
 func (m Model) leftWidth() int {
@@ -226,12 +247,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 			item := m.items[m.cursor]
-			if item.isDir {
+			if item.IsDir {
 				target := ""
-				if item.name == ".." {
+				if item.Name == ".." {
 					target = filepath.Base(m.currDir)
 				}
-				m.currDir = item.path
+				m.currDir = item.Path
 				m.loadDir(target)
 			} else {
 				m.fullScreen = true
@@ -253,7 +274,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "v":
-			if len(m.items) > 0 && !m.items[m.cursor].isDir {
+			if len(m.items) > 0 && !m.items[m.cursor].IsDir {
 				m.fullScreen = !m.fullScreen
 				m.fileScroll = 0
 			}
@@ -293,9 +314,9 @@ func (m Model) View() string {
 			return d.NoFileSelected
 		}
 		item := m.items[m.cursor]
-		header := headerStyle.Render(fmt.Sprintf(d.FullPreviewHeader, item.name, formatSize(item.size)))
+		header := headerStyle.Render(fmt.Sprintf(d.FullPreviewHeader, item.Name, formatSize(item.Size)))
 
-		lines := strings.Split(GetPreview(item.path, 5000, m.width-2, m.lang), "\n")
+		lines := strings.Split(GetPreview(item.Path, 5000, m.width-2, m.lang), "\n")
 		contentRows := m.height - 3
 		if contentRows < 1 {
 			contentRows = 1
@@ -353,11 +374,11 @@ func (m Model) View() string {
 	for i := m.scroll; i < endIndex; i++ {
 		item := m.items[i]
 		tag := "[FILE]"
-		if item.isDir {
+		if item.IsDir {
 			tag = "[DIR] "
 		}
 
-		displayName := item.name
+		displayName := item.Name
 		maxNameLen := leftW - 8
 		if len(displayName) > maxNameLen && maxNameLen > 3 {
 			displayName = displayName[:maxNameLen-3] + "..."
@@ -367,7 +388,7 @@ func (m Model) View() string {
 
 		if i == m.cursor {
 			leftLines = append(leftLines, selectedStyle.Render(lineText))
-		} else if item.isDir {
+		} else if item.IsDir {
 			leftLines = append(leftLines, dirStyle.Render(lineText))
 		} else {
 			leftLines = append(leftLines, fileStyle.Render(lineText))
@@ -403,10 +424,10 @@ func (m Model) View() string {
 	if len(m.items) > 0 {
 		currItem := m.items[m.cursor]
 		sizeInfo := "<DIR>"
-		if !currItem.isDir {
-			sizeInfo = formatSize(currItem.size)
+		if !currItem.IsDir {
+			sizeInfo = formatSize(currItem.Size)
 		}
-		statusText = fmt.Sprintf(d.ItemStatus, m.cursor+1, len(m.items), currItem.name, sizeInfo)
+		statusText = fmt.Sprintf(d.ItemStatus, m.cursor+1, len(m.items), currItem.Name, sizeInfo)
 	}
 
 	footer := footerStyle.Render(fmt.Sprintf(d.ExplorerFooter, statusText))

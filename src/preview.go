@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	"archive/zip"
@@ -321,10 +321,11 @@ func isBinary(data []byte) bool {
 
 func isCode(ext string) bool {
 	switch ext {
-	case ".go", ".py", ".js", ".ts", ".jsx", ".tsx", ".c", ".cpp", ".h", ".hpp",
-		".rs", ".java", ".rb", ".php", ".sh", ".bash", ".zsh", ".html", ".css",
-		".scss", ".xml", ".yaml", ".yml", ".toml", ".ini", ".conf", ".sql",
-		".dockerfile", ".makefile", ".env", ".lua", ".zig", ".dart", ".md":
+	case ".go", ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hxx",
+		".rs", ".py", ".js", ".ts", ".jsx", ".tsx", ".java", ".rb", ".php",
+		".sh", ".bash", ".zsh", ".html", ".css", ".scss", ".xml", ".yaml",
+		".yml", ".toml", ".ini", ".conf", ".sql", ".dockerfile", ".makefile",
+		".env", ".lua", ".zig", ".dart", ".md":
 		return true
 	default:
 		return false
