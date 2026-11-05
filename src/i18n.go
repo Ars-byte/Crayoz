@@ -26,6 +26,15 @@ type Dict struct {
 	ExplorerFooter    string
 	FullscreenHelp    string
 
+	// About
+	AboutTitle     string
+	AboutProject   string
+	AboutCreator   string
+	AboutLanguage  string
+	AboutYear      string
+	AboutLicense   string
+	AboutCloseHint string
+
 	// Errors
 	ErrAccess         string
 	ErrRunApp         string
@@ -65,8 +74,16 @@ var dictionaries = map[Language]Dict{
 		GoUpLevel:         "Go up one level to:\n%s",
 		NoItems:           "No items",
 		ItemStatus:        "[%d/%d] %s (%s)",
-		ExplorerFooter:    "%s  │  [↑/↓] Move  [Enter/→] Open  [←] Up  [v] Fullscreen  [Tab/t] Lang: EN  [q] Quit",
-		FullscreenHelp:    "[↑/↓] Scroll  [PgUp/PgDn] Page  [Esc/←] Back  [Tab/t] Lang: EN  [q] Quit",
+		ExplorerFooter:    "%s  │  [↑/↓] Move  [Enter/→] Open  [←] Up  [v] Fullscreen  [Tab/t] Lang: EN  [?] About  [q] Quit",
+		FullscreenHelp:    "[↑/↓] Scroll  [PgUp/PgDn] Page  [Esc/←] Back  [Tab/t] Lang: EN  [?] About  [q] Quit",
+
+		AboutTitle:     "About Crayoz",
+		AboutProject:   "Project :",
+		AboutCreator:   "Creator :",
+		AboutLanguage:  "Language:",
+		AboutYear:      "Year    :",
+		AboutLicense:   "License :",
+		AboutCloseHint: "[Esc / ? / a / Enter] Close",
 
 		ErrAccess:         "Error: could not access %q: %v\n",
 		ErrRunApp:         "Error running application: %v\n",
@@ -103,8 +120,16 @@ var dictionaries = map[Language]Dict{
 		GoUpLevel:         "Subir un nivel hacia:\n%s",
 		NoItems:           "Sin elementos",
 		ItemStatus:        "[%d/%d] %s (%s)",
-		ExplorerFooter:    "%s  │  [↑/↓] Mover  [Enter/→] Abrir  [←] Subir nivel  [v] Pantalla completa  [Tab/t] Idioma: ES  [q] Salir",
-		FullscreenHelp:    "[↑/↓] Desplazar  [PgUp/PgDn] Página  [Esc/←] Volver  [Tab/t] Idioma: ES  [q] Salir",
+		ExplorerFooter:    "%s  │  [↑/↓] Mover  [Enter/→] Abrir  [←] Subir nivel  [v] Pantalla completa  [Tab/t] Idioma: ES  [?] Acerca de  [q] Salir",
+		FullscreenHelp:    "[↑/↓] Desplazar  [PgUp/PgDn] Página  [Esc/←] Volver  [Tab/t] Idioma: ES  [?] Acerca de  [q] Salir",
+
+		AboutTitle:     "Acerca de Crayoz",
+		AboutProject:   "Proyecto:",
+		AboutCreator:   "Creador :",
+		AboutLanguage:  "Lenguaje:",
+		AboutYear:      "Año     :",
+		AboutLicense:   "Licencia:",
+		AboutCloseHint: "[Esc / ? / a / Enter] Cerrar",
 
 		ErrAccess:         "Error: no se pudo acceder a %q: %v\n",
 		ErrRunApp:         "Error al ejecutar la aplicación: %v\n",

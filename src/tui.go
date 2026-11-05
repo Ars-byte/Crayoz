@@ -30,6 +30,7 @@ type Model struct {
 	height     int
 	err        string
 	lang       Language
+	showAbout  bool
 }
 
 func NewModel(initialDir, selectTarget string) Model {
@@ -244,9 +245,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.updatePreview()
 
 	case tea.KeyMsg:
+		if m.showAbout {
+			switch msg.String() {
+			case "esc", "enter", "space", "?", "a", "q":
+				m.showAbout = false
+				return m, nil
+			}
+			return m, nil
+		}
+
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
+
+		case "?", "a":
+			m.showAbout = true
+			return m, nil
 
 		case "tab", "t":
 			m.lang = m.lang.Next()
@@ -350,6 +364,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
+	if m.showAbout {
+		return m.renderAboutModal()
+	}
+
 	d := T(m.lang)
 	if m.width == 0 || m.height == 0 {
 		return d.Starting
@@ -428,7 +446,6 @@ func (m Model) View() string {
 		Foreground(lipgloss.Color("#000000")).
 		Background(lipgloss.Color("#63b3ed")).
 		Width(leftW)
-
 
 	for i := m.scroll; i < endIndex; i++ {
 		item := m.items[i]
