@@ -13,13 +13,17 @@
 ## Features
 
 - **Dual-Panel Explorer**: Browse directories with real-time split preview.
+- **File Type Badges**: Automatically recognizes `.go`, `.c`, `.cpp`, `.rs`, `.py`, `.js`, `.ts`, `.json`, `.md`, `.sh`, `.zip`, images, and binaries with colored visual badges.
 - **Fullscreen Reader**: Distraction-free file reading mode with line-by-line and page scrolling.
 - **Multi-Format Previews**:
-  - **Source Code**: Line-numbered preview for Go, Python, JavaScript, TypeScript, Rust, C/C++, Shell, Markdown, and more.
+  - **Source Code**: Line-numbered preview with language headers for Go, C, C++, Rust, Python, JavaScript, TypeScript, Shell, and more.
+  - **Markdown Rendering**: Stylized preview for `.md` files highlighting headings, blockquotes, bullet lists, code blocks, and horizontal rules.
   - **Structured Data**: Pretty-printed JSON and column-aligned CSV/TSV tables.
   - **Archives**: Inspect `.zip` file tables of contents and preview `.gz` / `.gzip` compressed data.
   - **Binary Files**: Automatic MIME type detection, file metadata, permissions, and hexadecimal byte dump.
 - **Instant Language Switching**: Toggle between English and Spanish instantly inside the TUI with `Tab` or `t`.
+- **About Project Modal**: Dedicated info dialog (`?` or `a`) displaying creator, language, and year of creation (2026).
+- **Modular Architecture**: Clean separation with root CLI entry point and internal logic in `src/`.
 - **Zero External Runtime Dependencies**: Single self-contained binary.
 - **Automated CI/CD Workflow**: Every update compiles a ready-to-run `.bin` binary and packages a `.tar.gz` distribution into GitHub Releases.
 
@@ -37,7 +41,8 @@
 | `PgDn` / `f` / `Space` | Page down scroll |
 | `v` | Toggle fullscreen reading view |
 | `Tab` / `t` | **Toggle language (English ↔ Español)** |
-| `Esc` | Return to explorer view from fullscreen |
+| `?` / `a` | **Show About Project dialog** |
+| `Esc` | Return to explorer view from fullscreen / close modal |
 | `q` / `Ctrl+C` | Quit application |
 
 ---

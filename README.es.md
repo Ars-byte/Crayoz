@@ -13,13 +13,17 @@
 ## Características
 
 - **Explorador de doble panel**: Navega por carpetas con panel lateral de previsualización en tiempo real.
+- **Insignias por tipo de archivo**: Reconocimiento automático y badges coloreados para `.go`, `.c`, `.cpp`, `.rs`, `.py`, `.js`, `.ts`, `.json`, `.md`, `.sh`, `.zip`, imágenes y binarios.
 - **Lector a pantalla completa**: Modo de lectura sin distracciones con desplazamiento línea por línea y por página.
 - **Previsualización de múltiples formatos**:
-  - **Código fuente**: Vista numerada de líneas para Go, Python, JavaScript, TypeScript, Rust, C/C++, Shell, Markdown y más.
+  - **Código fuente**: Vista numerada de líneas con cabecera de lenguaje para Go, C, C++, Rust, Python, JavaScript, TypeScript, Shell y más.
+  - **Renderizado de Markdown**: Vista estilizada para archivos `.md` con realce de encabezados, citas, listas, bloques de código y líneas divisorias.
   - **Datos estructurados**: Formateo automático de JSON y tablas alineadas por columnas para CSV y TSV.
   - **Archivos comprimidos**: Inspección de contenido en archivos `.zip` y descompresión al vuelo de archivos `.gz` / `.gzip`.
   - **Archivos binarios**: Detección de tipo MIME, metadatos, permisos y volcado hexadecimal interactivo.
 - **Cambio instantáneo de idioma**: Alterna entre inglés y español al instante dentro de la TUI pulsando `Tab` o `t`.
+- **Ventana Acerca del proyecto**: Cuadro de diálogo (`?` o `a`) con información del creador, lenguaje y año de creación (2026).
+- **Arquitectura modular**: Código organizado con ejecutable en la raíz y módulos internos en `src/`.
 - **Sin dependencias externas en tiempo de ejecución**: Binario único y autocontenido.
 - **Compilación y Releases automáticas (CI/CD)**: Cada cambio compila un ejecutable `.bin` y genera un paquete `.tar.gz` publicado en GitHub Releases.
 
@@ -37,7 +41,8 @@
 | `PgDn` / `f` / `Espacio` | Desplazar una página hacia abajo |
 | `v` | Alternar modo pantalla completa |
 | `Tab` / `t` | **Cambiar idioma de la TUI (Inglés ↔ Español)** |
-| `Esc` | Volver al explorador desde pantalla completa |
+| `?` / `a` | **Ver ventana Acerca de (About)** |
+| `Esc` | Volver al explorador desde pantalla completa / cerrar modal |
 | `q` / `Ctrl+C` | Salir del programa |
 
 ---
