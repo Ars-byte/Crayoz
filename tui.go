@@ -133,3 +133,132 @@ func (m *Model) updatePreview() {
 
 	m.preview = GetPreview(item.path, maxLines, rightWidth, m.lang)
 }
+
+func (m Model) leftWidth() int {
+	w := m.width * 35 / 100
+	if w < 24 {
+		w = 24
+	}
+	if w > 42 {
+		w = 42
+	}
+	return w
+}
+
+func (m Model) Init() tea.Cmd {
+	return nil
+}
+
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
+		m.adjustScroll()
+		m.updatePreview()
+
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
+			return m, tea.Quit
+
+		case "tab", "t":
+			m.lang = m.lang.Next()
+			m.updatePreview()
+
+		case "up", "k":
+			if m.fullScreen {
+				if m.fileScroll > 0 {
+					m.fileScroll--
+				}
+			} else if m.cursor > 0 {
+				m.cursor--
+				m.adjustScroll()
+				m.updatePreview()
+			}
+
+		case "down", "j":
+			if m.fullScreen {
+				m.fileScroll++
+			} else if m.cursor < len(m.items)-1 {
+				m.cursor++
+				m.adjustScroll()
+				m.updatePreview()
+			}
+
+		case "pageup", "b":
+			step := m.height - 6
+			if step < 1 {
+				step = 1
+			}
+			if m.fullScreen {
+				m.fileScroll -= step
+				if m.fileScroll < 0 {
+					m.fileScroll = 0
+				}
+			} else {
+				m.cursor -= step
+				if m.cursor < 0 {
+					m.cursor = 0
+				}
+				m.adjustScroll()
+				m.updatePreview()
+			}
+
+		case "pagedown", "f", " ":
+			step := m.height - 6
+			if step < 1 {
+				step = 1
+			}
+			if m.fullScreen {
+				m.fileScroll += step
+			} else {
+				m.cursor += step
+				if m.cursor >= len(m.items) {
+					m.cursor = len(m.items) - 1
+				}
+				m.adjustScroll()
+				m.updatePreview()
+			}
+
+		case "enter", "right", "l":
+			if len(m.items) == 0 {
+				break
+			}
+			item := m.items[m.cursor]
+			if item.isDir {
+				target := ""
+				if item.name == ".." {
+					target = filepath.Base(m.currDir)
+				}
+				m.currDir = item.path
+				m.loadDir(target)
+			} else {
+				m.fullScreen = true
+				m.fileScroll = 0
+			}
+
+		case "left", "h", "backspace":
+			if m.fullScreen {
+				m.fullScreen = false
+			} else if m.currDir != "/" {
+				prevBase := filepath.Base(m.currDir)
+				m.currDir = filepath.Dir(m.currDir)
+				m.loadDir(prevBase)
+			}
+
+		case "esc":
+			if m.fullScreen {
+				m.fullScreen = false
+			}
+
+		case "v":
+			if len(m.items) > 0 && !m.items[m.cursor].isDir {
+				m.fullScreen = !m.fullScreen
+				m.fileScroll = 0
+			}
+		}
+	}
+
+	return m, nil
+}
