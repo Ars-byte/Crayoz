@@ -27,10 +27,24 @@ jobs:
           go-version: 'stable'
           check-latest: true
 
+      - name: Determine tag name
+        id: vars
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          else
+            TAG="v1.0.${{ github.run_number }}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Run tests
+        run: |
+          go test -v ./...
+
       - name: Build binary
         run: |
           go mod tidy
-          CGO_ENABLED=0 go build -ldflags="-s -w" -o Crayoz.bin .
+          CGO_ENABLED=0 go build -ldflags="-s -w -X Crayoz/src.Version=${{ steps.vars.outputs.tag }}" -o Crayoz.bin .
           chmod +x Crayoz.bin
 
       - name: Create tarball
@@ -45,16 +59,6 @@ jobs:
       - name: Generate Checksums
         run: |
           sha256sum Crayoz.bin Crayoz-linux-amd64.tar.gz > checksums.txt
-
-      - name: Determine tag name
-        id: vars
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            TAG="${GITHUB_REF#refs/tags/}"
-          else
-            TAG="v1.0.${{ github.run_number }}"
-          fi
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Create or Update GitHub Release
         run: |
