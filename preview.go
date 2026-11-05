@@ -64,3 +64,24 @@ func renderBinary(data []byte, info os.FileInfo, lang Language) string {
 
 	return sb.String()
 }
+
+func renderPlainText(data []byte, maxLines int, lang Language) string {
+	d := T(lang)
+	lines := strings.Split(string(data), "\n")
+	var sb strings.Builder
+
+	limit := len(lines)
+	if limit > maxLines {
+		limit = maxLines
+	}
+
+	for i := 0; i < limit; i++ {
+		sb.WriteString(lines[i] + "\n")
+	}
+
+	if len(lines) > limit {
+		sb.WriteString(fmt.Sprintf(d.RemainingLines, len(lines)-limit))
+	}
+
+	return sb.String()
+}
