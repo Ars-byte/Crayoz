@@ -11,6 +11,21 @@ import (
 )
 
 func main() {
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "-v", "--version", "version":
+			fmt.Printf("crayoz %s\n", src.Version)
+			return
+		case "-h", "--help", "help":
+			fmt.Println("Usage: crayoz [directory|file]")
+			fmt.Println("\nA fast, lightweight terminal file reader.")
+			fmt.Println("\nOptions:")
+			fmt.Println("  -v, --version  Print version and exit")
+			fmt.Println("  -h, --help     Print help and exit")
+			return
+		}
+	}
+
 	target := "."
 	if len(os.Args) > 1 {
 		target = os.Args[1]
