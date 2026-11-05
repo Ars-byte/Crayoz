@@ -52,6 +52,7 @@ type Dict struct {
 	Permissions      string
 	HexPreviewHeader string
 	RemainingBytes   string
+	MarkdownHeader   string
 }
 
 var dictionaries = map[Language]Dict{
@@ -91,6 +92,7 @@ var dictionaries = map[Language]Dict{
 		Permissions:      "  - Permissions: %s\n",
 		HexPreviewHeader: "\n--- Hexadecimal Preview ---\n",
 		RemainingBytes:   "... [%d remaining bytes]\n",
+		MarkdownHeader:   "Markdown Document: %s (%d lines)\n",
 	},
 	LangES: {
 		Starting:          "Iniciando...",
@@ -128,6 +130,7 @@ var dictionaries = map[Language]Dict{
 		Permissions:      "  - Permisos  : %s\n",
 		HexPreviewHeader: "\n--- Vista Previa Hexadecimal ---\n",
 		RemainingBytes:   "... [%d bytes restantes]\n",
+		MarkdownHeader:   "Documento Markdown: %s (%d líneas)\n",
 	},
 }
 

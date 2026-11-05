@@ -14,6 +14,8 @@ import (
 	"path/filepath"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/charmbracelet/lipgloss"
 )
 
 func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
@@ -51,6 +53,8 @@ func GetPreview(path string, maxLines, maxWidth int, lang Language) string {
 		return renderCSV(data, ',', maxLines, lang)
 	case ".tsv":
 		return renderCSV(data, '\t', maxLines, lang)
+	case ".md", ".markdown":
+		return renderMarkdown(data, filepath.Base(path), maxLines, maxWidth, lang)
 	}
 
 	if isBinary(data) {
@@ -231,6 +235,75 @@ func renderCSV(data []byte, delimiter rune, maxLines int, lang Language) string 
 	return sb.String()
 }
 
+func renderMarkdown(data []byte, filename string, maxLines, maxWidth int, lang Language) string {
+	d := T(lang)
+	lines := strings.Split(string(data), "\n")
+	var sb strings.Builder
+
+	sb.WriteString(fmt.Sprintf(d.MarkdownHeader, filename, len(lines)))
+	sb.WriteString(strings.Repeat("-", 45) + "\n")
+
+	limit := len(lines)
+	if limit > maxLines {
+		limit = maxLines
+	}
+
+	h1Style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#63b3ed"))
+	h2Style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#4fd1c5"))
+	h3Style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6ad55"))
+	quoteStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#a0aec0")).Italic(true)
+	bulletStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#68d391"))
+	ruleStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#4a5568"))
+	codeStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#f6e05e"))
+
+	inCodeBlock := false
+
+	for i := 0; i < limit; i++ {
+		line := lines[i]
+		trimmed := strings.TrimSpace(line)
+
+		if strings.HasPrefix(trimmed, "```") {
+			inCodeBlock = !inCodeBlock
+			sb.WriteString(codeStyle.Render("  "+line) + "\n")
+			continue
+		}
+
+		if inCodeBlock {
+			sb.WriteString(codeStyle.Render(fmt.Sprintf("  │ %s", line)) + "\n")
+			continue
+		}
+
+		if strings.HasPrefix(trimmed, "# ") {
+			sb.WriteString(h1Style.Render(line) + "\n")
+		} else if strings.HasPrefix(trimmed, "## ") {
+			sb.WriteString(h2Style.Render(line) + "\n")
+		} else if strings.HasPrefix(trimmed, "### ") {
+			sb.WriteString(h3Style.Render(line) + "\n")
+		} else if strings.HasPrefix(trimmed, "> ") {
+			sb.WriteString(quoteStyle.Render("  ▎ "+line[2:]) + "\n")
+		} else if strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") {
+			sb.WriteString(bulletStyle.Render("  • ") + line[2:] + "\n")
+		} else if trimmed == "---" || trimmed == "***" {
+			w := maxWidth - 4
+			if w < 10 {
+				w = 10
+			}
+			if w > 50 {
+				w = 50
+			}
+			sb.WriteString(ruleStyle.Render(strings.Repeat("─", w)) + "\n")
+		} else {
+			sb.WriteString(line + "\n")
+		}
+	}
+
+	if len(lines) > limit {
+		sb.WriteString(fmt.Sprintf(d.RemainingLines, len(lines)-limit))
+	}
+
+	return sb.String()
+}
+
 func getLanguageName(ext string) string {
 	switch ext {
 	case ".go":
@@ -378,11 +451,12 @@ func isBinary(data []byte) bool {
 
 func isCode(ext string) bool {
 	switch ext {
-	case ".go", ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hxx",
-		".rs", ".py", ".js", ".ts", ".jsx", ".tsx", ".java", ".rb", ".php",
-		".sh", ".bash", ".zsh", ".html", ".css", ".scss", ".xml", ".yaml",
-		".yml", ".toml", ".ini", ".conf", ".sql", ".dockerfile", ".makefile",
-		".env", ".lua", ".zig", ".dart", ".md":
+	case ".go", ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh",
+		".rs", ".py", ".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".jsx", ".tsx",
+		".java", ".cs", ".rb", ".php", ".sh", ".bash", ".zsh", ".fish", ".html",
+		".css", ".scss", ".sass", ".less", ".xml", ".yaml", ".yml", ".toml",
+		".ini", ".conf", ".sql", ".dockerfile", ".makefile", ".env", ".lua",
+		".zig", ".dart", ".scala", ".asm", ".s", ".cmake":
 		return true
 	default:
 		return false
