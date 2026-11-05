@@ -22,7 +22,7 @@
   - **Archivos comprimidos**: Inspección de contenido en archivos `.zip` y descompresión al vuelo de archivos `.gz` / `.gzip`.
   - **Archivos binarios**: Detección de tipo MIME, metadatos, permisos y volcado hexadecimal interactivo.
 - **Cambio instantáneo de idioma**: Alterna entre inglés y español al instante dentro de la TUI pulsando `Tab` o `t`.
-- **Ventana Acerca del proyecto**: Cuadro de diálogo (`?` o `a`) con información del creador, lenguaje y año de creación (2026).
+- **Pantalla Acerca de**: Vista limpia y sin bordes (`?` o `a`) que muestra versión, creador, repositorio, licencia, año y tecnologías; pulsa cualquier tecla para volver.
 - **Arquitectura modular**: Código organizado con ejecutable en la raíz y módulos internos en `src/`.
 - **Sin dependencias externas en tiempo de ejecución**: Binario único y autocontenido.
 - **Compilación y Releases automáticas (CI/CD)**: Cada cambio compila un ejecutable `.bin` y genera un paquete `.tar.gz` publicado en GitHub Releases.
@@ -41,8 +41,9 @@
 | `PgDn` / `f` / `Espacio` | Desplazar una página hacia abajo |
 | `v` | Alternar modo pantalla completa |
 | `Tab` / `t` | **Cambiar idioma de la TUI (Inglés ↔ Español)** |
-| `?` / `a` | **Ver ventana Acerca de (About)** |
-| `Esc` | Volver al explorador desde pantalla completa / cerrar modal |
+| `?` / `a` | **Ver pantalla Acerca de** |
+| `Cualquier tecla` | **Volver desde la pantalla Acerca de** |
+| `Esc` | Volver al explorador desde pantalla completa |
 | `q` / `Ctrl+C` | Salir del programa |
 
 ---
