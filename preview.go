@@ -188,3 +188,15 @@ func renderCSV(data []byte, delimiter rune, maxLines int, lang Language) string 
 
 	return sb.String()
 }
+
+import (
+	"encoding/json"
+)
+
+func renderJSON(data []byte, maxLines int, lang Language) string {
+	var pretty bytes.Buffer
+	if err := json.Indent(&pretty, data, "", "  "); err != nil {
+		return renderPlainText(data, maxLines, lang)
+	}
+	return renderPlainText(pretty.Bytes(), maxLines, lang)
+}
