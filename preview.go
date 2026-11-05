@@ -237,3 +237,39 @@ func renderZip(path string, maxLines int, lang Language) string {
 
 	return sb.String()
 }
+
+import (
+	"compress/gzip"
+	"io"
+)
+
+func renderGzip(path string, maxLines, maxWidth int, lang Language) string {
+	d := T(lang)
+	f, err := os.Open(path)
+	if err != nil {
+		return fmt.Sprintf(d.ErrOpenGzip, err)
+	}
+	defer f.Close()
+
+	gz, err := gzip.NewReader(f)
+	if err != nil {
+		return fmt.Sprintf(d.ErrDecompressGzip, err)
+	}
+	defer gz.Close()
+
+	data, err := io.ReadAll(gz)
+	if err != nil {
+		return fmt.Sprintf(d.ErrReadGzip, err)
+	}
+
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf(d.GzipHeader, filepath.Base(path), formatSize(int64(len(data)))))
+	sb.WriteString(strings.Repeat("-", 50) + "\n")
+
+	if isBinary(data) {
+		sb.WriteString(renderBinary(data, nil, lang))
+	} else {
+		sb.WriteString(renderPlainText(data, maxLines-2, lang))
+	}
+	return sb.String()
+}
