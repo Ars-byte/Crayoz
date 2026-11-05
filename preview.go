@@ -85,3 +85,41 @@ func renderPlainText(data []byte, maxLines int, lang Language) string {
 
 	return sb.String()
 }
+
+func isCode(ext string) bool {
+	switch ext {
+	case ".go", ".py", ".js", ".ts", ".jsx", ".tsx", ".c", ".cpp", ".h", ".hpp",
+		".rs", ".java", ".rb", ".php", ".sh", ".bash", ".zsh", ".html", ".css",
+		".scss", ".xml", ".yaml", ".yml", ".toml", ".ini", ".conf", ".sql",
+		".dockerfile", ".makefile", ".env", ".lua", ".zig", ".dart", ".md":
+		return true
+	default:
+		return false
+	}
+}
+
+func renderCode(data []byte, ext string, maxLines int, lang Language) string {
+	d := T(lang)
+	lines := strings.Split(string(data), "\n")
+	var sb strings.Builder
+
+	limit := len(lines)
+	if limit > maxLines {
+		limit = maxLines
+	}
+
+	digitWidth := len(fmt.Sprintf("%d", len(lines)))
+	if digitWidth < 3 {
+		digitWidth = 3
+	}
+
+	for i := 0; i < limit; i++ {
+		sb.WriteString(fmt.Sprintf("%*d | %s\n", digitWidth, i+1, lines[i]))
+	}
+
+	if len(lines) > limit {
+		sb.WriteString(fmt.Sprintf(d.RemainingLines, len(lines)-limit))
+	}
+
+	return sb.String()
+}
