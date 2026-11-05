@@ -1,4 +1,4 @@
-# File_reader
+# Crayoz
 
 [![Go Version](https://img.shields.io/badge/Go-1.24%2B-00ADD8?style=flat&logo=go)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -6,7 +6,7 @@
 
 > **Language / Idioma**: **English** | [Español](README.es.md)
 
-**File_reader** is a fast, lightweight, terminal-based file explorer and previewer built in Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea) and [Lip Gloss](https://github.com/charmbracelet/lipgloss).
+**Crayoz** is a fast, lightweight, terminal-based file explorer and previewer built in Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea) and [Lip Gloss](https://github.com/charmbracelet/lipgloss).
 
 ---
 
@@ -46,23 +46,23 @@
 
 ### Pre-built Binaries (GitHub Releases)
 
-Download the latest pre-compiled binary (`File_reader.bin`) or the compressed tarball (`File_reader-linux-amd64.tar.gz`) from the [Releases](https://github.com/Ars-byte/-File-reader-in-go/releases) page:
+Download the latest pre-compiled binary (`Crayoz.bin`) or the compressed tarball (`Crayoz-linux-amd64.tar.gz`) from the [Releases](https://github.com/Ars-byte/-File-reader-in-go/releases) page:
 
 ```bash
 # Download and make executable
-curl -L -o File_reader https://github.com/Ars-byte/-File-reader-in-go/releases/latest/download/File_reader.bin
-chmod +x File_reader
+curl -L -o Crayoz https://github.com/Ars-byte/-File-reader-in-go/releases/latest/download/Crayoz.bin
+chmod +x Crayoz
 
 # Move to your PATH (optional)
-sudo mv File_reader /usr/local/bin/
+sudo mv Crayoz /usr/local/bin/
 ```
 
 Or extract the tarball:
 
 ```bash
-tar -xzf File_reader-linux-amd64.tar.gz
-chmod +x File_reader.bin
-./File_reader.bin
+tar -xzf Crayoz-linux-amd64.tar.gz
+chmod +x Crayoz.bin
+./Crayoz.bin
 ```
 
 ### Build from Source
@@ -71,17 +71,17 @@ Requirements: [Go](https://go.dev/dl/) 1.22 or higher.
 
 ```bash
 # Clone the repository
-git clone https://github.com/Ars-byte/-File-reader-in-go.git File_reader
-cd File_reader
+git clone https://github.com/Ars-byte/-File-reader-in-go.git Crayoz
+cd Crayoz
 
 # Download dependencies
 go mod download
 
 # Build binary
-go build -ldflags="-s -w" -o File_reader .
+go build -ldflags="-s -w" -o Crayoz .
 
 # Run
-./File_reader
+./Crayoz
 ```
 
 ---
@@ -90,13 +90,13 @@ go build -ldflags="-s -w" -o File_reader .
 
 ```bash
 # Open file explorer in current directory
-./File_reader
+./Crayoz
 
 # Open in a specific directory
-./File_reader ~/Documents
+./Crayoz ~/Documents
 
 # Open and focus on a specific file
-./File_reader ./hello.txt
+./Crayoz ./hello.txt
 ```
 
 ---

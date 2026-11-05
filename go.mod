@@ -1,4 +1,4 @@
-module File_reader
+module Crayoz
 
 go 1.24.0
 
