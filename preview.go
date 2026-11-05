@@ -123,3 +123,68 @@ func renderCode(data []byte, ext string, maxLines int, lang Language) string {
 
 	return sb.String()
 }
+
+import (
+	"bytes"
+	"encoding/csv"
+)
+
+func renderCSV(data []byte, delimiter rune, maxLines int, lang Language) string {
+	d := T(lang)
+	reader := csv.NewReader(bytes.NewReader(data))
+	reader.Comma = delimiter
+	reader.FieldsPerRecord = -1
+
+	records, err := reader.ReadAll()
+	if err != nil || len(records) == 0 {
+		return renderPlainText(data, maxLines, lang)
+	}
+
+	colWidths := make(map[int]int)
+	for _, row := range records {
+		for colIdx, val := range row {
+			w := len(val)
+			if w > 25 {
+				w = 25
+			}
+			if w > colWidths[colIdx] {
+				colWidths[colIdx] = w
+			}
+		}
+	}
+
+	var sb strings.Builder
+	limit := len(records)
+	if limit > maxLines {
+		limit = maxLines
+	}
+
+	for rowIdx := 0; rowIdx < limit; rowIdx++ {
+		row := records[rowIdx]
+		sb.WriteString("| ")
+		for colIdx, val := range row {
+			w := colWidths[colIdx]
+			displayVal := val
+			if len(displayVal) > 25 {
+				displayVal = displayVal[:22] + "..."
+			}
+			sb.WriteString(fmt.Sprintf("%-*s | ", w, displayVal))
+		}
+		sb.WriteString("\n")
+
+		if rowIdx == 0 {
+			sb.WriteString("+-")
+			for colIdx := range row {
+				w := colWidths[colIdx]
+				sb.WriteString(strings.Repeat("-", w) + "-+-")
+			}
+			sb.WriteString("\n")
+		}
+	}
+
+	if len(records) > limit {
+		sb.WriteString(fmt.Sprintf(d.MoreRows, len(records)-limit))
+	}
+
+	return sb.String()
+}
